@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ShopXperience</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <style>
+    html, body {
+      height: auto;
+      overflow-x: hidden; 
+    }
+
+    body {
+      background: #0a0a1a; 
+      position: relative;
+      overflow: hidden;
+    }
+
+    #stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: transparent;
+      pointer-events: none; 
+    }
+
+    #stars .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%; 
+      animation: meteor-shower linear infinite;
+      opacity: 0;  
+    }
+
+    @keyframes meteor-shower {
+      0% { 
+        transform: translateX(-10vw) translateY(-10vh);
+        opacity: 0; 
+      }
+      10% { opacity: 1; } 
+      90% { opacity: 1; }
+      100% { 
+        transform: translateX(110vw) translateY(110vh);
+        opacity: 0; 
+      }
+    }
+
+    section {
+      position: relative;
+      z-index: 10;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.98), rgba(0,0,0,1)); 
+      padding-top: 8rem;
+      padding-bottom: 5rem;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .cart-item-animation {
+      animation: slideInFromLeft 0.5s ease-out forwards;
+    }
+    @keyframes slideInFromLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .cart-item-remove-animation {
+      animation: slideOutToRight 0.5s ease-out forwards;
+    }
+    @keyframes slideOutToRight {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(100%);
+        height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0a0a1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+    .spinner {
+      border: 8px solid rgba(255, 255, 255, 0.3);
+      border-top: 8px solid #00F0FF;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    #scrollToTopBtn.pulse {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.7); }
+      70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(0, 240, 255, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+    }
+    .toast-notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: rgba(10, 10, 26, 0.95);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 240, 255, 0.4); 
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        transform: translateY(20px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid rgba(0, 240, 255, 0.7); 
+    }
+    .toast-notification.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .hamburger-icon {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 20px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+    .hamburger-icon span {
+        display: block;
+        width: 100%;
+        height: 3px;
+        background-color: #00F0FF;
+        border-radius: 2px;
+        transition: all 0.3s ease-in-out;
+    }
+    .hamburger-icon.open span:nth-child(1) {
+        transform: translateY(8.5px) rotate(45deg);
+    }
+    .hamburger-icon.open span:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger-icon.open span:nth-child(3) {
+        transform: translateY(-8.5px) rotate(-45deg);
+    }
+    .mobile-nav-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-in-out;
+    }
+    .mobile-nav-menu.open {
+        max-height: 500px;
+    }
+  </style>
+</head>
+<body class="font-sans text-white">
+
+<div id="preloader">
+  <div class="spinner"></div>
+</div>
+
+<div id="stars">
+  </div>
+
+<header id="main-header" class="fixed top-0 left-0 w-full bg-black bg-opacity-40 backdrop-blur-md z-50 transition-all duration-300 border-b border-transparent">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <svg xmlns="http://www.w3.org/2000/svg" width="3.3em" height="3.3em" viewBox="0 0 100 100">
+      <path fill="#00F0FF" d="M50 0C22.404 0 0 22.404 0 50s22.404 50 50 50c27.546 0 49.911-22.324 49.992-49.852A2 2 0 0 0 100 50a2 2 0 0 0-.006-.133C99.922 22.332 77.552 0 50 0m0 3c2.776 0 5.49.254 8.133.715c.638 1.396 4.103 1.696.43 1.451c-1.416 2.02-7.019-2.123-10.75.047c-1.119 1.576-8.2 3.272-5.54 5.828c3.787-.687-.417-.067-.304 1.813c-1.936.67-4.686 3.87-4.647.595c-.48-2.398 2.162-4.607-2.115-2.81c-.235 1.306-6.674 3.82-3.453 4.398c3.387-1.7-1.353 2.698 2.59.963c-2.691 1.22-.65 2.551-1.885 5.24c-4.353-2.035-6.359 1.822-7.27 5.52c1.032.097 1.382.636 1.282 1.28c.522.051 1.26.123 1.593.153c2.183-.167 4.193-1.598 5.235-3.683c2.483-1.893 4.515-2.98 7.523-2.838c-1.443-.245-3.368 6.082-.443 3.687c-1.258-5.365 5.58.518 4.082.551c-2.513.372-3.32 1.016-1.156 2.83c1.507 1.147 2.433-4.392 4.275-3.427c-.245-1.055-4.553-4.45-3.916-4.272c.147.041.557.274 1.342.768c3.546 1.116 2.965 5.69 6.185 7.298c2.24 2.913 5.706-1.689 8.155-.293c.084 1.922 2.252 1.727 2.168-.332c2.445 1.872-.26 6.487-3.655 4.641c-3.224 1.858-7.833-4.413-9.785.344c-.87 2.244-3.849-1.737-5.082-1.822c-4.305.477-.172-4.208-3.154-4.71c-3.843-.033-7.797 1.58-11.498 1.34c-2.013.619-3.276 1.445-4.479 2.188c-1.155 1.724-3.425 2.954-5.76 6.254c-.428.66-1.172 1.478-2.058 2.47c-1.212 4.123-2.697 8.25-2.463 12.54c2.643 2.788 3.263 9.522 8.455 8.988c3.43 1.772 6.028-1.288 9.244-.26c.593 3.341 6.865 1.95 5.174 5.295c-1.765 3.996 3.393 5.923 4.236 9.56c2.202 3.636-3.322 7.426 1.114 10.555c2.456 4.07 5.302 10.253 11.18 7.848c4.573-.293 7.37-4.15 10.226-6.781c-.259-4.826 8.459-4.3 6.508-10.436c-1.15-.724.072-3.625-.56-4.652c.654-1.345 2.958-5.176 5.187-7.051c3.417-2.65 4.85-6.796 5.978-10.807c-.698-3.373-2.29-.072-4.318-.215c-5.396 2.001.127-2.32 2.158-3.55c2.866-1.689 5.654-4.57 6.285-7.64c2.656-2.87-6.413-5.658-.715-4.72c3.603-.703 5.451-1.131 6.373 2.319c3.53 1.396 3.249 7.793 5.237 11.277c1.03-1.27.618-.283 1.056 1.244c1.15-3.297-1.273-8.61-.52-12.896A47.2 47.2 0 0 1 97 50c0 25.975-21.025 47-47 47S3 75.975 3 50C3 29.806 15.71 12.61 33.57 5.953c1.734-.496 3.47-.987 5.168-1.588A47.2 47.2 0 0 1 50 3m10.293 1.143c.499.11 1 .218 1.492.345c-.114.755-.748.287-1.492-.345M35.168 6.219c-1.148.021-2.457.447-2.117 1.511c.63.232 1.285.06 1.902-.091c2.902-.808 1.691-1.448.215-1.42m14.113 3.758c1.528-.225.085 4.183-2.281 3.046c-3.878.401.584-.245.725-2.025c.694-.67 1.204-.97 1.556-1.021m21.49 8.728c.29.035.378.388-.023 1.229c-.327 1.078 4.93 4.569 4.604 6.793c-4.668 1.225-1.75-3.326-4.79-4.252c-3.337-1.105-.66-3.873.21-3.77m-13.539.873c1.734 2.323 4.44.501 6.967 2.387c3.092 3.12-4.874-.41-6.258 1.389c-4.131 1.271-2.103-2.51-.709-3.776M16.836 33.754c-.294-.044-.535.16-.748.99c.71.037 1.24.117 1.621.238l.232-.718c-.443-.16-.803-.465-1.105-.51m58.379.508c.68 2.359 5.965 1.985 4.685 4.195l-.603.426c-1.032-.675-5.325-3.52-4.082-4.621M62.678 37.29c2.438 1.663 4.185 5.07 5.744 7.74c2.142 1.524 2.21 3.973 3.6 5.899c-.568.72-1.678-.593-1.905-1.06c-1.857-1.299-3.39-4.6-4.703-7.237c-.825-1.828-2.838-3.495-2.736-5.342m14.586 38.904c-.222-.015-.56.245-1.037.899c-3.443 2.537-6.176 5.556-6.38 9.91c2.385 1.084 4.406-3.285 5.688-4.81c1.469-.711 2.689-5.934 1.729-5.999"/>
+    </svg>
+    <a href="#hero"class="text-3xl font-bold cursor-pointer hover:text-cyan-400 transition" onclick="window.scrollTo({top:0,behavior:'smooth'})"> ShopXperience</a>
+    <nav class="space-x-6 hidden md:flex items-center">
+      <a href="#hero" class="hover:text-cyan-400 transition">Home</a>
+      <a href="#about" class="hover:text-cyan-400 transition">Negozio</a>
+      <a href="#catalog" class="hover:text-cyan-400 transition">Catalogo</a>
+      <a href="#specials" class="hover:text-cyan-400 transition">Offerte</a>
+      <a href="#reviews" class="hover:text-cyan-400 transition">Recensioni</a>
+      <a href="#faq" class="hover:text-cyan-400 transition">FAQ</a>
+      <a href="#newsletter" class="hover:text-cyan-400 transition">Newsletter</a>
+      <a href="#contact" class="hover:text-cyan-400 transition">Contatti</a>
+      <a href="#cart" class="relative hover:text-cyan-400 transition">
+       <svg xmlns="http://www.w3.org/2000/svg" width="1.8em" height="1.8em" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M7 22q-.825 0-1.412-.587T5 20t.588-1.412T7 18t1.413.588T9 20t-.587 1.413T7 22m10 0q-.825 0-1.412-.587T15 20t.588-1.412T17 18t1.413.588T19 20t-.587 1.413T17 22M6.15 6l2.4 5h7l2.75-5zM5.2 4h14.75q.575 0 .875.513t.025 1.037l-3.55 6.4q-.275.5-.737.775T15.55 13H8.1L7 15h12v2H7q-1.125 0-1.7-.987t-.05-1.963L6.6 11.6L3 4H1V2h3.25zm3.35 7h7z"/>
+      </svg>
+        <span id="cart-count" class="absolute -top-2 -right-2 bg-cyan-400 text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+      </a>
+    </nav>
+
+    <div class="md:hidden flex items-center">
+      <a href="#cart" class="relative hover:text-cyan-400 transition mr-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1.8em" height="1.8em" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M7 22q-.825 0-1.412-.587T5 20t.588-1.412T7 18t1.413.588T9 20t-.587 1.413T7 22m10 0q-.825 0-1.412-.587T15 20t.588-1.412T17 18t1.413.588T19 20t-.587 1.413T17 22M6.15 6l2.4 5h7l2.75-5zM5.2 4h14.75q.575 0 .875.513t.025 1.037l-3.55 6.4q-.275.5-.737.775T15.55 13H8.1L7 15h12v2H7q-1.125 0-1.7-.987t-.05-1.963L6.6 11.6L3 4H1V2h3.25zm3.35 7h7z"/>
+      </svg>
+        <span id="cart-count-mobile" class="absolute -top-2 -right-2 bg-cyan-400 text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+      </a>
+      <button id="hamburger-btn" class="hamburger-icon focus:outline-none" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="mobile-nav-menu md:hidden bg-black bg-opacity-60 backdrop-blur-sm">
+    <nav class="flex flex-col items-center py-4 space-y-3">
+      <a href="#hero" class="block py-2 hover:text-cyan-400 transition" onclick="toggleMobileMenu()">Home</a>
+      <a href="#about" class="block py-2 hover:text-cyan-400 transition" onclick="toggleMobileMenu()">Negozio</a>
+      <a href="#catalog" class="block py-2 hover:text-cyan-400 transition" onclick="toggleMobileMenu()">Catalogo</a>
+      <a href="#specials" class="block py-2 hover:text-cyan-400 transition" onclick="toggleMobileMenu()">Offerte</a>
+      <a href="#reviews" class="block py-2 hover:text-cyan-400 transition" onclick="toggleMobileMenu()">Recensioni</a>
+      <a href="#faq" class="block py-2 hover:text-cyan-400 transition" onclick="toggleMobileMenu()">FAQ</a>
+      <a href="#newsletter" class="block py-2 hover:text-cyan-400 transition" onclick="toggleMobileMenu()">Newsletter</a>
+      <a href="#contact" class="block py-2 hover:text-cyan-400 transition" onclick="toggleMobileMenu()">Contatti</a>
+    </nav>
+  </div>
+</header>
+
+<main class="space-y-40 max-w-7xl mx-auto">
+  
+
+  <section id="hero" class="text-center px-6">
+    <h2 class="text-6xl font-extrabold mb-6 drop-shadow-lg leading-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 animate-text-gradient">Benvenuto su <span class="text-cyan-400">ShopXperience</span></h2>
+    <p class="text-xl text-gray-200 max-w-3xl mx-auto mb-10 transform translate-y-4 opacity-0 animate-fade-in-up delay-300">Il tuo negozio online dove stile, qualità e convenienza si incontrano.</p>
+    <button onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})" 
+      class="bg-cyan-400 text-black px-8 py-4 rounded-xl font-bold text-lg hover:bg-cyan-500 transition shadow-lg transform hover:scale-105 active:scale-95 animate-button-pop delay-500">
+      Esplora il Catalogo
+    </button>
+  </section>
+
+  <section id="about" class="px-6 max-w-4xl mx-auto text-center space-y-6">
+    <h2 class="text-4xl font-bold mb-4 text-cyan-400 animate-slide-in-right">Il nostro negozio</h2>
+    <p class="text-gray-300 text-lg animate-fade-in delay-200">Nato nel 2010 da una passione per il design e la qualità, ShopXperience è diventato un punto di riferimento per chi cerca prodotti unici e affidabili.</p>
+    <p class="text-gray-300 text-xl italic font-semibold animate-fade-in delay-400">“Innovazione, design e la tua soddisfazione sono i nostri pilastri.”</p>
+  </section>
+
+  <section id="catalog" class="px-6">
+    <h2 class="text-4xl font-bold mb-12 text-center text-cyan-400 animate-slide-in-left">Catalogo prodotti</h2>
+    <product-gallery></product-gallery>
+    <div class="mt-16">
+      <product-detail></product-detail>
+    </div>
+  </section>
+
+  <section id="specials" class="px-6 max-w-6xl mx-auto text-center">
+    <h2 class="text-4xl font-bold mb-10 text-cyan-400 animate-slide-in-right">Offerte Speciali</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="bg-cyan-400 bg-opacity-10 p-6 rounded-2xl shadow-lg hover:scale-105 hover:bg-opacity-20 transition transform cursor-pointer border border-transparent hover:border-cyan-400 animate-zoom-in">
+        <h3 class="font-bold text-xl mb-2 text-cyan-300">-20% Occhiali di design</h3>
+        <p class="text-gray-200">Solo per questa settimana, la visione ti aspetta.</p>
+      </div>
+      <div class="bg-cyan-400 bg-opacity-10 p-6 rounded-2xl shadow-lg hover:scale-105 hover:bg-opacity-20 transition transform cursor-pointer border border-transparent hover:border-cyan-400 animate-zoom-in delay-100">
+        <h3 class="font-bold text-xl mb-2 text-cyan-300">Spedizione gratuita</h3>
+        <p class="text-gray-200">Per ordini superiori a 300€.</p>
+      </div>
+      <div class="bg-cyan-400 bg-opacity-10 p-6 rounded-2xl shadow-lg hover:scale-105 hover:bg-opacity-20 transition transform cursor-pointer border border-transparent hover:border-cyan-400 animate-zoom-in delay-200">
+        <h3 class="font-bold text-xl mb-2 text-cyan-300">Nuove Sneakers</h3>
+        <p class="text-gray-200">Sconto lancio del 15% per i primi 50 clienti.</p>
+      </div>
+      <div class="bg-cyan-400 bg-opacity-10 p-6 rounded-2xl shadow-lg hover:scale-105 hover:bg-opacity-20 transition transform cursor-pointer border border-transparent hover:border-cyan-400 animate-zoom-in delay-300">
+        <h3 class="font-bold text-xl mb-2 text-cyan-300">Bundle Smart-Gear</h3>
+        <p class="text-gray-200">Acquista zaino e cuffie con il 10% di sconto.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews" class="px-6 max-w-6xl mx-auto text-center">
+    <h2 class="text-4xl font-bold mb-10 text-cyan-400 animate-slide-in-left">Dicono di noi: Recensioni dei nostri clienti</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <review-card author="Alice R." text="Prodotti eccellenti e consegna rapidissima!" stars="5"></review-card>
+      <review-card author="Marco B." text="Esperienza d’acquisto eccellente, incredibile!" stars="4"></review-card>
+      <review-card author="Luca M." text="Qualità/prezzo superiore a ogni aspettativa!" stars="4"></review-card>
+      <review-card author="Giulia N." text="Tornerò sicuramente a fare shopping qui!" stars="5"></review-card>
+      <review-card author="Sara F." text="Assistenza clienti super efficiente." stars="5"></review-card>
+      <review-card author="Giovanni V." text="Il design dei prodotti è così moderno!" stars="5"></review-card>
+    </div>
+  </section>
+
+  <section id="cart" class="px-6 max-w-4xl mx-auto">
+    <h2 class="text-4xl font-bold mb-10 text-center text-cyan-400 animate-slide-in-right">Il tuo carrello</h2>
+    <cart-view></cart-view>
+  </section>
+
+  <section id="faq" class="px-6 max-w-4xl mx-auto">
+    <h2 class="text-4xl font-bold mb-10 text-center text-cyan-400 animate-slide-in-left">Domande Frequenti</h2>
+    <faq-accordion></faq-accordion>
+  </section>
+
+  <section id="newsletter" class="px-6 max-w-3xl mx-auto text-center space-y-6">
+    <h2 class="text-4xl font-bold text-cyan-400 animate-slide-in-right">Iscriviti alla Newsletter</h2>
+    <p class="text-gray-300 max-w-xl mx-auto animate-fade-in delay-200">Ricevi aggiornamenti, offerte esclusive e le ultime novità direttamente nella tua casella email.</p>
+    <newsletter-form></newsletter-form>
+  </section>
+
+  <section id="contact" class="px-6 max-w-3xl mx-auto">
+    <h2 class="text-4xl font-bold mb-10 text-center text-cyan-400 animate-slide-in-left">Contattaci</h2>
+    <contact-form></contact-form>
+  </section>
+  <a href="#hero" id="scrollToTopBtn"  class="transition fixed bottom-6 right-6 text-black p-3 transition-all duration-300 " style="z-index: 9999;" aria-label="Scroll to top" onclick="toggleMobileMenu()">
+    <button>
+    <svg xmlns="http://www.w3.org/2000/svg" width="5em" height="5em" viewBox="0 0 24 24">
+      <path fill="#00F0FF" d="m15 13l-4 4v-3H2v-2h9V9zM5 20v-4h2v2h10v-7.81l-5-4.5L7.21 10H4.22L12 3l10 9h-3v8z"/>
+    </svg>
+  </button></a>
+  
+
+</main>
+
+<div id="toast-container"></div>
+
+<footer class="bg-black bg-opacity-50 mt-32 py-8 text-center text-gray-400 text-sm border-t border-cyan-700">
+  © 2025 ShopXperience. Tutti i diritti riservati.
+</footer>
+
+<script type="module">
+
+  const PRODUCTS = [
+    { id: 1, name: 'Occhiali Gucci [Edizione Speciale]', price: 319.99, image: 'https://www.estheroptica.eu/wp-content/uploads/2023/04/Gucci-GG1331S-001-black-grey-54-Uomo_man_sunglasses_saules_akiniai_vyrams_occhiali_da_sole_uomo.jpg' , description: 'Eleganza e protezione potenziata in un unico accessorio. Perfetti per ogni stagione e occasione, questi occhiali combinano stile iconico con materiali di nuova generazione per garantire durata e comfort avanzati. Protezione UV potenziata e visione ottimizzata.', tags: ['Moda', 'Estate', 'Accessori'],
+      additionalImages: [
+        'https://www.estheroptica.eu/wp-content/uploads/2023/04/Gucci-GG1331S-001-black-grey-54-Uomo_man_sunglasses_saules_akiniai_vyrams_occhiali_da_sole_uomo.jpg',
+        'https://egress.storeden.net/gallery/64550a7800f2206d21633718',
+        'https://cdn.storeden.net/secache/64550a83be7ea0384c7731d8'
+      ]
+    },
+    { id: 2, name: 'Borsone Louis Vuitton [Edizione Lusso]', price: 2450.00, image: 'https://it.louisvuitton.com/images/is/image/lv/1/PP_VP_L/louis-vuitton-keepall-bandouliere-55--M40605_PM1_Other%20view.jpg', description: 'Compatto, spazioso e alla moda per ogni viaggio. Il borsone da viaggio definitivo, realizzato con la rinomata tela Monogram e finiture in pelle sintetica. Ideale per viaggi brevi o come accessorio di lusso per il tuo stile di vita dinamico.', tags: ['Viaggio', 'Lifestyle', 'Lusso'],
+      additionalImages: [
+        'https://it.louisvuitton.com/images/is/image/lv/1/PP_VP_L/louis-vuitton-keepall-bandouliere-55--M40605_PM1_Other%20view.jpg',
+        'https://medias.collectorsquare.com/images/products/334149/00pp-borsa-da-viaggio-louis-vuitton-keepall-travel-bag-in-pelle-nera-a-scacchi.jpg',
+        'https://it.louisvuitton.com/images/is/image/lv/1/PP_VP_L/louis-vuitton-keepall-bandouliere-55--M40605_PM1_Back%20view.jpg?impolicy=bgcolor&bgcolor=%23f8f8f8'
+      ]
+    },
+    { id: 3, name: 'Scarpe Valentino [Nuova Collezione]', price: 629.99, image: 'https://www.lacicognafirme.it/cdn/shop/files/ckMcewfeFiOPiG4JScreenshot_10.jpg?v=1716646288', description: 'Comfort e stile per ogni occasione. Queste sneakers combinano un design sofisticato con un comfort eccezionale grazie all\'ammortizzazione avanzata, perfette per un look casual-chic o per aggiungere un tocco di eleganza ai tuoi outfit quotidiani.', tags: ['Moda', 'Casual Elegante', 'Calzature'],
+      additionalImages: [
+        'https://www.lacicognafirme.it/cdn/shop/files/ckMcewfeFiOPiG4JScreenshot_10.jpg?v=1716646288',
+        'https://immagini.drezzy.it/modalab/community/modalab/wp-content/uploads/2014/08/open-valentino-sneakers-scarpe-sportive-uomo-autunno-inverno-2014-2015.jpg',
+        'https://images.magicstore.cloud/ProductImage/Big/ti_qcy7wl4jv/mJJ7jlStlS43X3D74.jpg'
+      ]
+    },
+    { id: 4, name: 'Airpods Pro 2 [Audio Avanzato]', price: 219.00, image: 'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836', description: 'Audio cristallino e design moderno. La cancellazione attiva del rumore ti immerge completamente nella tua musica, mentre la modalità Trasparenza ti mantiene connesso al mondo circostante. Batteria a lunga durata con ricarica rapida e integrazione perfetta con i tuoi dispositivi.', tags: ['Musica', 'Tecnologia Audio', 'Connettività'],
+      additionalImages: [
+        'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836',
+        'https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/MQD83_AV2?wid=1144&hei=1144&fmt=jpeg&qlt=95&.v=1660670020612',
+        'https://www.apple.com/v/airpods-pro/l/images/meta/og__eui2mpgzwyaa_overview.png'
+      ]
+    },
+    { id: 5, name: 'Orologio Rolex [Cronografo Esclusivo]', price: 15399.99, image: 'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700', description: 'Per chi ama distinguersi con classe. Un simbolo di prestigio e precisione, l\'orologio Rolex è un capolavoro di ingegneria e design. Resistente all\'acqua, con movimento automatico auto-ricaricante e materiali di lusso, è l\'investimento perfetto per il tuo polso.', tags: ['Moda', 'Eleganza', 'Lusso', 'Gioielli'],
+      additionalImages: [
+        'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700',
+        'https://dallabonaorologi.com/cdn/shop/files/C4C99FDD-5A83-4C92-BEC0-7F7C077AE858.jpg?v=1710886319',
+        'https://media.rolex.com/image/upload/q_auto:best/f_auto/c_limit,w_3840/v1727258031/rolexcom/collection/family-pages/professional-watches/submariner/top-navigation/professional-watches-submariner-all-models-navigation_m126603-0001_2210jva_001'
+      ]
+    }
+];
+
+
+  /**
+   * Displays a transient toast notification.
+   * @param {string} message The message to display.
+   * @param {string} type Optional. 'success' or 'error' for different styling.
+   */
+  function showToast(message, type = 'info') {
+    const toastContainer = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type === 'success' ? 'bg-green-600 border-green-500' : type === 'error' ? 'bg-red-600 border-red-500' : 'bg-gray-800 border-cyan-500'}`;
+    toast.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        ${type === 'success' ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />' : ''}
+        ${type === 'error' ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />' : ''}
+        ${type === 'info' && !type ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />' : ''}
+      </svg>
+      <span>${message}</span>
+    `;
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add('show');
+    }, 100);
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+      toast.addEventListener('transitionend', () => toast.remove());
+    }, 3000);
+  }
+
+
+  const cartService = {
+    cart: JSON.parse(localStorage.getItem('shopxperience-cart')) || [],
+
+    saveCart() {
+      localStorage.setItem('shopxperience-cart', JSON.stringify(this.cart));
+      this.updateCartCount();
+      this.dispatchEvent(new CustomEvent('cart-updated'));
+    },
+
+    addItem(productId, quantity = 1) {
+      const product = PRODUCTS.find(p => p.id === productId);
+      if (!product) return;
+
+      const existingItem = this.cart.find(item => item.id === productId);
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        this.cart.push({ ...product, quantity });
+      }
+      this.saveCart();
+    },
+
+    removeItem(productId) {
+      const cartItemElement = document.querySelector(`.cart-item-animation[data-product-id="${productId}"]`);
+      if (cartItemElement) {
+        cartItemElement.classList.add('cart-item-remove-animation');
+        cartItemElement.addEventListener('animationend', () => {
+          this.cart = this.cart.filter(item => item.id !== productId);
+          this.saveCart();
+        }, { once: true });
+      } else {
+        this.cart = this.cart.filter(item => item.id !== productId);
+        this.saveCart();
+      }
+    },
+
+    updateQuantity(productId, quantity) {
+      const item = this.cart.find(item => item.id === productId);
+      if (item) {
+        item.quantity = Math.max(0, quantity);
+        if (item.quantity === 0) {
+          this.removeItem(productId);
+        } else {
+          this.saveCart();
+        }
+      }
+    },
+
+    getTotalItems() {
+      return this.cart.reduce((total, item) => total + item.quantity, 0);
+    },
+
+    getTotalPrice() {
+      return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    },
+
+    clearCart() {
+      this.cart = [];
+      this.saveCart();
+    },
+
+    updateCartCount() {
+      const count = this.getTotalItems();
+      const cartCountElement = document.getElementById('cart-count');
+      const cartCountMobileElement = document.getElementById('cart-count-mobile'); 
+      if (cartCountElement) {
+        cartCountElement.textContent = count;
+        cartCountElement.classList.toggle('hidden', count === 0);
+      }
+      if (cartCountMobileElement) {
+        cartCountMobileElement.textContent = count;
+        cartCountMobileElement.classList.toggle('hidden', count === 0);
+      }
+    },
+
+    dispatchEvent(event) {
+      document.dispatchEvent(event);
+    }
+  };
+
+  class ProductCard extends HTMLElement {
+    connectedCallback() {
+      const { id, name, price, image } = JSON.parse(this.getAttribute('data'));
+      this.innerHTML = `
+        <div class="bg-gradient-to-br from-gray-800 to-black bg-opacity-70 hover:bg-opacity-90 rounded-xl p-4 transition transform hover:scale-105 shadow-xl cursor-pointer group relative overflow-hidden border border-gray-700 hover:border-cyan-400" 
+             tabindex="0" role="button" aria-pressed="false" aria-label="Visualizza dettagli di ${name}">
+          <img src="${image}" alt="${name}" class="w-full h-48 object-cover rounded-md mb-4 transform group-hover:scale-105 transition duration-300 shadow-md" />
+          <h3 class="text-xl font-semibold text-cyan-300 group-hover:text-cyan-200">${name}</h3>
+          <p class="text-cyan-400 mt-2 text-lg font-bold">${price.toFixed(2)}€</p>
+          <button class="add-to-cart-btn mt-4 bg-cyan-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-cyan-700 transition shadow-md w-full 
+                       opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75">Aggiungi al carrello</button>
+        </div>
+      `;
+      this.querySelector('div').addEventListener('click', (e) => {
+        if (!e.target.closest('.add-to-cart-btn')) {
+          window.showDetail(id);
+        }
+      });
+      this.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
+        e.stopPropagation(); 
+        cartService.addItem(id);
+        showToast(`${name} aggiunto al carrello!`, 'success');
+        document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+  }
+  customElements.define('product-card', ProductCard);
+
+  class ProductGallery extends HTMLElement {
+    connectedCallback() {
+      this.className = "grid gap-8 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto";
+      PRODUCTS.forEach(p => {
+        const card = document.createElement('product-card');
+        card.setAttribute('data', JSON.stringify(p));
+        this.appendChild(card);
+      });
+    }
+  }
+  customElements.define('product-gallery', ProductGallery);
+
+  class ProductDetail extends HTMLElement {
+    constructor() {
+        super();
+        this.product = null;
+        this.currentImageIndex = 0;
+    }
+
+    connectedCallback() {
+        this.render();
+    }
+
+    set data(p) {
+        this.product = p;
+        this.currentImageIndex = 0;
+        this.render();
+        this.scrollIntoView({behavior:'smooth'});
+    }
+
+    navigateImage(direction) {
+        if (!this.product || !this.product.additionalImages || this.product.additionalImages.length === 0) {
+            return;
+        }
+        const totalImages = this.product.additionalImages.length;
+        this.currentImageIndex = (this.currentImageIndex + direction + totalImages) % totalImages;
+        this.render();
+    }
+
+    render() {
+        if (!this.product) {
+            this.innerHTML = `
+                <div class="bg-gradient-to-br from-gray-800 to-black p-8 rounded-2xl shadow-2xl text-center text-gray-300 transition-all duration-500 max-w-3xl mx-auto border border-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-cyan-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                    </svg>
+                    <p>Seleziona un prodotto dalla galleria per vederne i dettagli qui.</p>
+                    <p class="text-sm mt-2">Clicca su qualsiasi immagine del prodotto!</p>
+                </div>
+            `;
+            return;
+        }
+        const { id, name, price, description, tags, additionalImages } = this.product;
+        const currentImage = additionalImages && additionalImages.length > 0 ? additionalImages[this.currentImageIndex] : this.product.image;
+
+        this.innerHTML = `
+            <div class="bg-gradient-to-br from-gray-900 to-black p-8 rounded-2xl shadow-2xl max-w-3xl mx-auto transition-transform duration-500 ease-in-out transform hover:scale-[1.02] border border-cyan-700">
+                <div class="relative">
+                    <img src="${currentImage}" alt="${name}" class="w-full h-72 object-cover rounded-lg mb-6 shadow-xl border border-gray-600" />
+                    ${additionalImages && additionalImages.length > 1 ? `
+                        <button id="prev-image" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button id="next-image" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    ` : ''}
+                </div>
+                <h2 class="text-4xl font-bold mb-2 text-cyan-400">${name}</h2>
+                <p class="text-white text-2xl font-semibold mb-4">${price.toFixed(2)}€</p>
+                <p class="mt-4 text-gray-200 leading-relaxed">${description}</p>
+                <div class="mt-6 flex flex-wrap gap-2">
+                    ${tags.map(t => `<span class="bg-cyan-900 text-cyan-200 px-4 py-1 rounded-full text-sm font-medium border border-cyan-700">${t}</span>`).join('')}
+                </div>
+                <button id="add-to-cart-detail-btn" class="mt-8 bg-cyan-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-cyan-700 transition shadow-lg w-full text-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75">Aggiungi al carrello</button>
+            </div>
+        `;
+
+        if (additionalImages && additionalImages.length > 1) {
+            this.querySelector('#prev-image').addEventListener('click', () => this.navigateImage(-1));
+            this.querySelector('#next-image').addEventListener('click', () => this.navigateImage(1));
+        }
+
+        this.querySelector('#add-to-cart-detail-btn').addEventListener('click', () => {
+            cartService.addItem(id);
+            showToast(`${name} aggiunto al carrello!`, 'success');
+            document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+}
+  customElements.define('product-detail', ProductDetail);
+
+  window.showDetail = function(id) {
+    document.querySelector('product-detail').data = PRODUCTS.find(p => p.id === id);
+  }
+
+  class ReviewCard extends HTMLElement {
+    connectedCallback() {
+      const author = this.getAttribute('author');
+      const text = this.getAttribute('text');
+      const stars = +this.getAttribute('stars') || 5;
+      let starsHTML = '';
+      for (let i = 0; i < 5; i++) {
+        starsHTML += `<svg class="w-5 h-5 inline ${i < stars ? 'text-cyan-400' : 'text-gray-600'}" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.974a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.287 3.974c.3.921-.755 1.688-1.538 1.118l-3.384-2.46a1 1 0 00-1.175 0l-3.384 2.46c-.783.57-1.838-.197-1.537-1.118l1.287-3.974a1 1 0 00-.364-1.118L2.038 9.4c-.783-.57-.38-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.974z"/></svg>`;
+      }
+      this.innerHTML = `
+        <div class="bg-gradient-to-br from-gray-800 to-black p-6 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:scale-105 border border-transparent hover:border-cyan-400">
+          <div class="mb-3">${starsHTML}</div>
+          <p class="italic mb-4 text-gray-200">"${text}"</p>
+          <p class="font-semibold text-cyan-300">- ${author}</p>
+        </div>
+      `;
+    }
+  }
+  customElements.define('review-card', ReviewCard);
+
+  class FaqAccordion extends HTMLElement {
+    connectedCallback() {
+      const faqs = [
+        { q: "Come posso pagare?", a: "Accettiamo una vasta gamma di metodi di pagamento sicuri, inclusi carte di credito (Visa, MasterCard, American Express), PayPal e bonifico bancario. Tutte le transazioni sono crittografate per la tua sicurezza." },
+        { q: "Quanto tempo ci mette la spedizione?", a: "La spedizione standard impiega generalmente 3-5 giorni lavorativi. Offriamo anche opzioni di spedizione express per ricevere il tuo ordine più velocemente, con tempi di consegna di 1-2 giorni lavorativi." },
+        { q: "Posso restituire un prodotto?", a: "Sì, la tua soddisfazione è la nostra priorità. Puoi restituire qualsiasi prodotto entro 14 giorni dalla ricezione, purché sia nelle condizioni originali. Consulta la nostra politica di reso per maggiori dettagli." },
+        { q: "Offrite garanzia sui prodotti?", a: "Certamente! Tutti i nostri prodotti sono coperti da una garanzia minima di 2 anni, come previsto dalla legge, a partire dalla data di acquisto. Per alcuni articoli, la garanzia può essere estesa." },
+        { q: "Come posso tracciare il mio ordine?", a: "Una volta spedito il tuo ordine, riceverai un'email di conferma con un numero di tracciamento e un link per monitorare lo stato della consegna direttamente dal sito del corriere." }
+      ];
+      this.innerHTML = faqs.map(({q,a},i) => `
+        <details class="mb-4 bg-gradient-to-br from-gray-800 to-black rounded-lg p-4 cursor-pointer hover:bg-opacity-90 transition border border-transparent hover:border-cyan-400">
+          <summary class="font-semibold text-lg text-cyan-300">${q}</summary>
+          <p class="mt-2 text-gray-300 leading-relaxed">${a}</p>
+        </details>
+      `).join('');
+    }
+  }
+  customElements.define('faq-accordion', FaqAccordion);
+
+  class NewsletterForm extends HTMLElement {
+    connectedCallback() {
+      this.innerHTML = `
+        <form class="flex flex-col sm:flex-row justify-center items-center gap-4" novalidate>
+          <input type="email" placeholder="La tua email" required class="rounded-lg px-4 py-3 text-black w-full sm:w-auto flex-grow focus:ring-2 focus:ring-cyan-400 focus:outline-none bg-gray-200 border border-gray-400" aria-label="Inserisci la tua email per la newsletter" />
+          <button type="submit" class="bg-cyan-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-cyan-700 transition shadow-lg transform hover:scale-105 active:scale-95 w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75">Iscriviti</button>
+        </form>
+        <p class="mt-4 text-green-400 text-center hidden" id="newsletter-msg"></p>
+      `;
+      const form = this.querySelector('form');
+      const msg = this.querySelector('#newsletter-msg');
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const email = form.querySelector('input').value.trim();
+        if (!email || !email.includes('@')) {
+          showToast('Inserisci una email valida per iscriverti alla nostra rete!', 'error');
+          return;
+        }
+        msg.textContent = `Grazie per esserti iscritto, ${email}! Riceverai le nostre offerte esclusive.`;
+        msg.classList.remove('hidden');
+        showToast('Iscrizione avvenuta con successo!', 'success');
+        form.reset();
+        setTimeout(() => msg.classList.add('hidden'), 5000);
+      });
+    }
+  }
+  customElements.define('newsletter-form', NewsletterForm);
+
+  class ContactForm extends HTMLElement {
+    connectedCallback() {
+      this.innerHTML = `
+        <form class="space-y-6 max-w-xl mx-auto p-6 bg-gradient-to-br from-gray-800 to-black rounded-2xl shadow-2xl border border-gray-700" novalidate>
+          <input type="text" name="name" placeholder="Nome Completo" required class="w-full rounded-lg px-4 py-3 text-black focus:ring-2 focus:ring-cyan-400 focus:outline-none bg-gray-200 border border-gray-400" aria-label="Nome completo" />
+          <input type="email" name="email" placeholder="Email di Contatto" required class="w-full rounded-lg px-4 py-3 text-black focus:ring-2 focus:ring-cyan-400 focus:outline-none bg-gray-200 border border-gray-400" aria-label="La tua email" />
+          <textarea name="message" placeholder="Il tuo Messaggio" rows="5" required class="w-full rounded-lg px-4 py-3 text-black focus:ring-2 focus:ring-cyan-400 focus:outline-none resize-y bg-gray-200 border border-gray-400"></textarea>
+          <button type="submit" class="bg-cyan-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-cyan-700 transition shadow-lg w-full text-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75">Invia Messaggio</button>
+          <p id="contact-msg" class="text-green-400 text-center mt-4 hidden"></p>
+        </form>
+      `;
+      const form = this.querySelector('form');
+      const msg = this.querySelector('#contact-msg');
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const name = form.name.value.trim();
+        const email = form.email.value.trim();
+        const message = form.message.value.trim();
+        if (!name || !email.includes('@') || !message) {
+          showToast('Per favore, compila tutti i campi correttamente per contattarci.', 'error');
+          return;
+        }
+        msg.textContent = `Grazie ${name}, il tuo messaggio è stato inviato! Ti risponderemo al più presto.`;
+        msg.classList.remove('hidden');
+        showToast('Messaggio inviato con successo!', 'success');
+        form.reset();
+        setTimeout(() => msg.classList.add('hidden'), 7000);
+      });
+    }
+  }
+  customElements.define('contact-form', ContactForm);
+
+  class CartView extends HTMLElement {
+    constructor() {
+      super();
+      this.render = this.render.bind(this); 
+    }
+
+    connectedCallback() {
+      document.addEventListener('cart-updated', this.render);
+      this.render();
+    }
+
+    disconnectedCallback() {
+      document.removeEventListener('cart-updated', this.render);
+    }
+
+    render() {
+      const cartItems = cartService.cart;
+      const totalItems = cartService.getTotalItems();
+      const totalPrice = cartService.getTotalPrice();
+
+      if (totalItems === 0) {
+        this.innerHTML = `
+          <div class="bg-gradient-to-br from-gray-800 to-black p-8 rounded-2xl shadow-2xl text-center text-gray-300 border border-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" width="8em" height="8em" viewBox="0 0 24 24" text-align="center" class="mx-auto mb-4 text-cyan-400 animate-bounce">
+              <path fill="currentColor" d="M7 22q-.825 0-1.412-.587T5 20t.588-1.412T7 18t1.413.588T9 20t-.587 1.413T7 22m10 0q-.825 0-1.412-.587T15 20t.588-1.412T17 18t1.413.588T19 20t-.587 1.413T17 22M6.15 6l2.4 5h7l2.75-5zM5.2 4h14.75q.575 0 .875.513t.025 1.037l-3.55 6.4q-.275.5-.737.775T15.55 13H8.1L7 15h12v2H7q-1.125 0-1.7-.987t-.05-1.963L6.6 11.6L3 4H1V2h3.25zm3.35 7h7z"/>
+              </svg>
+            <p class="text-xl">Il tuo carrello è attualmente vuoto.</p>
+            <p class="mt-2">Inizia a esplorare il nostro <a href="#catalog" class="text-cyan-400 hover:underline transition" onclick="toggleMobileMenu()">catalogo</a> per trovare i tuoi prodotti preferiti!</p>
+          </div>
+        `;
+        return;
+      }
+
+      this.innerHTML = `
+        <div class="bg-gradient-to-br from-gray-900 to-black p-8 rounded-2xl shadow-2xl space-y-6 border border-cyan-700">
+          <div id="cart-items-list" class="space-y-4">
+            ${cartItems.map(item => `
+              <div class="flex items-center justify-between bg-white bg-opacity-10 p-4 rounded-lg cart-item-animation border border-gray-700" data-product-id="${item.id}">
+                <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-md mr-4 shadow-md border border-gray-600" />
+                <div class="flex-grow">
+                  <h3 class="text-lg font-semibold text-cyan-300">${item.name}</h3>
+                  <p class="text-white">${item.price.toFixed(2)}€ x ${item.quantity}</p>
+                  <p class="text-white font-bold">${(item.price * item.quantity).toFixed(2)}€</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button data-id="${item.id}" data-action="decrease" class="bg-cyan-600 text-white px-3 py-1 rounded-md font-bold hover:bg-cyan-700 transition transform hover:scale-110 active:scale-90 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75" aria-label="Diminuisci quantità di ${item.name}">-</button>
+                  <span class="text-lg w-8 text-center text-cyan-200">${item.quantity}</span>
+                  <button data-id="${item.id}" data-action="increase" class="bg-cyan-600 text-white px-3 py-1 rounded-md font-bold hover:bg-cyan-700 transition transform hover:scale-110 active:scale-90 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75" aria-label="Aumenta quantità di ${item.name}">+</button>
+                  <button data-id="${item.id}" data-action="remove" class="ml-4 text-red-400 hover:text-red-600 transition transform hover:scale-125 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75" aria-label="Rimuovi ${item.name} dal carrello">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="text-right text-3xl font-bold mt-6 pt-4 border-t border-gray-700 text-cyan-400">
+            Totale: ${totalPrice.toFixed(2)}€
+          </div>
+
+          <form id="checkout-form" class="space-y-4 mt-8 p-6 bg-white bg-opacity-10 rounded-xl shadow-inner border border-gray-700">
+            <h3 class="text-2xl font-bold mb-4 text-center text-white">Completa il tuo ordine</h3>
+            <input type="text" name="name" placeholder="Nome Completo" required class="w-full rounded-lg px-4 py-3 text-black focus:ring-2 focus:ring-cyan-400 focus:outline-none bg-gray-200 border border-gray-400" aria-label="Nome completo per l'ordine" />
+            <input type="email" name="email" placeholder="Email di Contatto" required class="w-full rounded-lg px-4 py-3 text-black focus:ring-2 focus:ring-cyan-400 focus:outline-none bg-gray-200 border border-gray-400" aria-label="Email per l'ordine" />
+            <input type="text" name="address" placeholder="Indirizzo di Spedizione" required class="w-full rounded-lg px-4 py-3 text-black focus:ring-2 focus:ring-cyan-400 focus:outline-none bg-gray-200 border border-gray-400" aria-label="Indirizzo di spedizione" />
+            <div class="grid grid-cols-2 gap-4">
+              <input type="text" name="city" placeholder="Città" required class="w-full rounded-lg px-4 py-3 text-black focus:ring-2 focus:ring-cyan-400 focus:outline-none bg-gray-200 border border-gray-400" aria-label="Città" />
+              <input type="text" name="zip" placeholder="CAP" required class="w-full rounded-lg px-4 py-3 text-black focus:ring-2 focus:ring-cyan-400 focus:outline-none bg-gray-200 border border-gray-400" aria-label="CAP" />
+            </div>
+            <select name="payment" required class="w-full rounded-lg px-4 py-3 text-black bg-gray-200 border border-gray-400 focus:ring-2 focus:ring-cyan-400 focus:outline-none" aria-label="Seleziona metodo di pagamento">
+                <option value="" disabled selected>Metodo di Pagamento</option>
+                <option value="credit_card">Carta di Credito</option>
+                <option value="paypal">PayPal</option>
+                <option value="bank_transfer">Bonifico Bancario</option>
+            </select>
+            <button type="submit" class="bg-cyan-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-cyan-700 transition shadow-lg w-full text-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75">Conferma Ordine</button>
+            <p id="order-confirmation-msg" class="text-green-400 text-center mt-4 hidden text-lg font-semibold"></p>
+          </form>
+        </div>
+      `;
+
+      this.querySelectorAll('[data-action="increase"]').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const id = parseInt(e.target.dataset.id);
+          const item = cartService.cart.find(i => i.id === id);
+          if (item) cartService.updateQuantity(id, item.quantity + 1);
+        });
+      });
+
+      this.querySelectorAll('[data-action="decrease"]').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const id = parseInt(e.target.dataset.id);
+          const item = cartService.cart.find(i => i.id === id);
+          if (item) cartService.updateQuantity(id, item.quantity - 1);
+        });
+      });
+
+      this.querySelectorAll('[data-action="remove"]').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const id = parseInt(e.target.dataset.id);
+          showToast(`Rimozione di un articolo in corso...`, 'info');
+          cartService.removeItem(id);
+        });
+      });
+      const checkoutForm = this.querySelector('#checkout-form');
+      const orderConfirmationMsg = this.querySelector('#order-confirmation-msg');
+
+      if (checkoutForm) {
+        checkoutForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const formData = new FormData(checkoutForm);
+          const data = Object.fromEntries(formData.entries());
+
+          if (!data.name || !data.email || !data.address || !data.city || !data.zip || !data.payment) {
+            showToast('Per favorwe, compila tutti i campi richiesti per completare l\'ordine.', 'error');
+            return;
+          }
+          orderConfirmationMsg.textContent = `Grazie ${data.name}, il tuo ordine è stato completato con successo! Riceverai una email di conferma a breve.`;
+          orderConfirmationMsg.classList.remove('hidden');
+          showToast('Ordine completato con successo!', 'success');
+          checkoutForm.reset();
+          cartService.clearCart();
+          setTimeout(() => {
+            orderConfirmationMsg.classList.add('hidden');
+          }, 7000);
+        });
+      }
+    }
+  }
+  customElements.define('cart-view', CartView);
+
+
+  window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+      preloader.style.opacity = '0';
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 500);
+    }
+  });
+
+  window.addEventListener('scroll', () => {
+    const header = document.getElementById('main-header');
+    if (window.scrollY > 50) {
+      header.classList.add('bg-opacity-80', 'shadow-lg', 'border-b', 'border-cyan-400');
+    } else {
+      header.classList.remove('bg-opacity-80', 'shadow-lg', 'border-b', 'border-cyan-400');
+    }
+
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    if (window.scrollY > 400) { 
+        scrollToTopBtn.classList.remove('opacity-0', 'translate-y-5', 'hidden');
+        scrollToTopBtn.classList.add('opacity-100', 'translate-y-0', 'pulse');
+    } else {
+        scrollToTopBtn.classList.add('opacity-0', 'translate-y-5', 'hidden');
+        scrollToTopBtn.classList.remove('opacity-100', 'translate-y-0', 'pulse');
+    }
+  });
+
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  
+  function toggleMobileMenu() {
+      hamburgerBtn.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+  }
+
+  hamburgerBtn.addEventListener('click', toggleMobileMenu);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    cartService.updateCartCount();
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    const starsContainer = document.getElementById('stars');
+    const numberOfStars = 100; 
+    for (let i = 0; i < numberOfStars; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        const size = Math.random() * 2 + 0.5; 
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${Math.random() * 20 - 10}%`; 
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.animationDelay = `${Math.random() * 20}s`; 
+        star.style.animationDuration = `${Math.random() * 10 + 10}s`; 
+        star.style.boxShadow = `0 0 ${size * 2}px ${size * 0.5}px rgba(255, 255, 255, ${0.5 + Math.random() * 0.5})`;
+        starsContainer.appendChild(star);
+    }
+  });
+
+  ScrollReveal().reveal('#hero h2', {
+    distance: '60px',
+    origin: 'top',
+    duration: 1200,
+    easing: 'cubic-bezier(.5, 0, 0, 1)',
+    delay: 200
+  });
+  ScrollReveal().reveal('#hero p', {
+    distance: '40px',
+    origin: 'bottom',
+    duration: 1000,
+    easing: 'ease-out',
+    delay: 500
+  });
+  ScrollReveal().reveal('#hero button', {
+    scale: 0.8,
+    duration: 800,
+    delay: 800,
+    easing: 'ease-out'
+  });
+
+  ScrollReveal().reveal('#about h2', {
+    distance: '50px',
+    origin: 'left',
+    duration: 1000,
+    easing: 'ease-out'
+  });
+  ScrollReveal().reveal('#about p', {
+    distance: '50px',
+    origin: 'right',
+    duration: 1000,
+    easing: 'ease-out',
+    interval: 100
+  });
+
+  ScrollReveal().reveal('#catalog h2, #specials h2, #reviews h2, #cart h2, #faq h2, #newsletter h2, #contact h2', {
+    distance: '50px',
+    origin: 'top',
+    duration: 1000,
+    easing: 'ease-out',
+    delay: 100
+  });
+
+  ScrollReveal().reveal('product-card, .bg-cyan-400.bg-opacity-10.p-6.rounded-2xl', { 
+    distance: '30px',
+    origin: 'bottom',
+    duration: 800,
+    interval: 100,
+    easing: 'ease-out',
+    scale: 0.95
+  });
+
+  ScrollReveal().reveal('review-card, details, form', {
+    distance: '30px',
+    origin: 'bottom',
+    duration: 700,
+    interval: 100,
+    easing: 'ease-out'
+  });
+
+  const style = document.createElement('style');
+  style.innerHTML = `
+    @keyframes text-gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .animate-text-gradient {
+      background-size: 200% auto;
+      animation: text-gradient 3s linear infinite;
+    }
+  `;
+  document.head.appendChild(style);
+
+</script>
+</body>
+</html>
