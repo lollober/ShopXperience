@@ -7,17 +7,17 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/scrollreveal"></script>
   <style>
+    main#home {
+      overflow-x: hidden;
+    }
     html, body {
       height: auto;
-      overflow-x: hidden; 
     }
-
     body {
-      background: #0a0a1a; 
+      background: #0a0a1a;
       position: relative;
-      overflow: hidden;
+      
     }
-
     #stars {
       position: fixed;
       top: 0;
@@ -26,38 +26,56 @@
       height: 100%;
       z-index: -2;
       background: transparent;
-      pointer-events: none; 
+      pointer-events: none;
     }
-
     #stars .star {
       position: absolute;
       background: white;
-      border-radius: 50%; 
+      border-radius: 50%;
       animation: meteor-shower linear infinite;
-      opacity: 0;  
+      opacity: 0;
     }
-
     @keyframes meteor-shower {
-      0% { 
+      0% {
         transform: translateX(-10vw) translateY(-10vh);
-        opacity: 0; 
+        opacity: 0;
       }
-      10% { opacity: 1; } 
+      10% { opacity: 1; }
       90% { opacity: 1; }
-      100% { 
+      100% {
         transform: translateX(110vw) translateY(110vh);
-        opacity: 0; 
+        opacity: 0;
       }
     }
-
     section {
       position: relative;
       z-index: 10;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.98), rgba(0,0,0,1)); 
       padding-top: 8rem;
       padding-bottom: 5rem;
     }
-
+    #schermata2:not(.hidden) {
+      padding-top: 100px;
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+}
+    aside{
+      position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+    z-index: 1000;
+    }
+    aside.open {
+    right: 0;
+  }
     .fade-in {
       opacity: 0;
       transform: translateY(20px);
@@ -69,8 +87,7 @@
         transform: none;
       }
     }
-
-    .cart-item-animation {
+    .schermata2-item-animation {
       animation: slideInFromLeft 0.5s ease-out forwards;
     }
     @keyframes slideInFromLeft {
@@ -83,8 +100,7 @@
         transform: translateX(0);
       }
     }
-
-    .cart-item-remove-animation {
+    .schermata2-item-remove-animation {
       animation: slideOutToRight 0.5s ease-out forwards;
     }
     @keyframes slideOutToRight {
@@ -102,7 +118,6 @@
         margin-bottom: 0;
       }
     }
-
     #preloader {
       position: fixed;
       top: 0;
@@ -137,61 +152,62 @@
       100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
     }
     .toast-notification {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: rgba(10, 10, 26, 0.95);
-        color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 240, 255, 0.4); 
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-        transform: translateY(20px);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        border: 1px solid rgba(0, 240, 255, 0.7); 
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: rgba(10, 10, 26, 0.95);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 240, 255, 0.4);
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+      transform: translateY(20px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(0, 240, 255, 0.7);
     }
     .toast-notification.show {
-        opacity: 1;
-        transform: translateY(0);
+      opacity: 1;
+      transform: translateY(0);
     }
     .hamburger-icon {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 30px;
-        height: 20px;
-        cursor: pointer;
-        transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
     }
     .hamburger-icon span {
-        display: block;
-        width: 100%;
-        height: 3px;
-        background-color: #00F0FF;
-        border-radius: 2px;
-        transition: all 0.3s ease-in-out;
+      display: block;
+      width: 100%;
+      height: 3px;
+      background-color: #00F0FF;
+      border-radius: 2px;
+      transition: all 0.3s ease-in-out;
     }
     .hamburger-icon.open span:nth-child(1) {
-        transform: translateY(8.5px) rotate(45deg);
+      transform: translateY(8.5px) rotate(45deg);
     }
     .hamburger-icon.open span:nth-child(2) {
-        opacity: 0;
+      opacity: 0;
     }
     .hamburger-icon.open span:nth-child(3) {
-        transform: translateY(-8.5px) rotate(-45deg);
+      transform: translateY(-8.5px) rotate(-45deg);
     }
     .mobile-nav-menu {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.5s ease-in-out;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-in-out;
     }
     .mobile-nav-menu.open {
-        max-height: 500px;
+      max-height: 500px;
     }
+  
   </style>
 </head>
 <body class="font-sans text-white">
@@ -210,9 +226,9 @@
       <path fill="#0caeff" d="M23.707 11.442q-.842-.18-1.703-.21a10.09 10.09 0 0 0-9.558-9.138c0-.661-.17-1.303-.23-1.793a.3.3 0 0 0-.601 0c-.07.49-.2 1.122-.26 1.783c-4.079 0-9.018 3.827-9.358 9.267c-1.844.11-3.006.742-.742 1.002l.711.09c.07 2.375.872 5.45 2.936 6.823a.3.3 0 0 0 .34-.49c-1.833-1.283-2.494-4.149-2.494-6.313a12 12 0 0 0 2.004-.24a.3.3 0 0 0 0-.601c-.722-.09-1.062-.23-1.944-.28a9.15 9.15 0 0 1 8.516-8.146c0 .32.06.621.08.882c.11.921 0 1.322.451 1.272c.45-.05.4-.44.491-1.272c0-.26.07-.551.1-.872a9.1 9.1 0 0 1 8.456 8.095c-1.733.28-2.144.792.08 1.002c.06 4.489-3.106 8.546-8.796 9.017a9.7 9.7 0 0 0-.2-1.733a.3.3 0 1 0-.602 0c-.1.611-.27 1.002-.36 1.813a9 9 0 0 1-2.806-.38a.34.34 0 0 0-.24.6c.968.33 1.983.503 3.005.512q-.005.363.06.721c.11.852 0 1.122.341 1.122c.551.16.511-.48.601-1.122c0-.21.08-.46.11-.731c6.172-.361 9.88-4.72 9.9-9.779a14 14 0 0 0 1.682-.3a.3.3 0 0 0 .239-.503a.3.3 0 0 0-.209-.098"/>
     </g>
     </svg>
-    <a href="#hero"class="text-3xl font-bold cursor-pointer hover:text-cyan-400 transition" onclick="window.scrollTo({top:0,behavior:'smooth'})"> ShopXperience</a>
+    <a href="#hero"class="text-3xl font-bold cursor-pointer hover:text-cyan-400 transition" onclick="window.scrollTo({top:0,behavior:'smooth'})"> <button id="btnHomeTop">ShopXperience</button></a>
     <nav class="space-x-6 hidden md:flex items-center">
-      <a href="#hero" class="hover:text-cyan-400 transition">Home</a>
+      <a href="#hero" class="hover:text-cyan-400 transition"><button id="btnHome">Home</button></a>
       <a href="#about" class="hover:text-cyan-400 transition">Negozio</a>
       <a href="#catalog" class="hover:text-cyan-400 transition">Catalogo</a>
       <a href="#specials" class="hover:text-cyan-400 transition">Offerte</a>
@@ -220,20 +236,20 @@
       <a href="#faq" class="hover:text-cyan-400 transition">FAQ</a>
       <a href="#newsletter" class="hover:text-cyan-400 transition">Newsletter</a>
       <a href="#contact" class="hover:text-cyan-400 transition">Contatti</a>
-      <a href="#cart" class="relative hover:text-cyan-400 transition">
+      <a><button id="btnSchermata2" class="relative hover:text-cyan-400 transition">
        <svg xmlns="http://www.w3.org/2000/svg" width="1.8em" height="1.8em" viewBox="0 0 24 24">
         <path fill="currentColor" d="M7 22q-.825 0-1.412-.587T5 20t.588-1.412T7 18t1.413.588T9 20t-.587 1.413T7 22m10 0q-.825 0-1.412-.587T15 20t.588-1.412T17 18t1.413.588T19 20t-.587 1.413T17 22M6.15 6l2.4 5h7l2.75-5zM5.2 4h14.75q.575 0 .875.513t.025 1.037l-3.55 6.4q-.275.5-.737.775T15.55 13H8.1L7 15h12v2H7q-1.125 0-1.7-.987t-.05-1.963L6.6 11.6L3 4H1V2h3.25zm3.35 7h7z"/>
       </svg>
-        <span id="cart-count" class="absolute -top-2 -right-2 bg-cyan-400 text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
-      </a>
+        <span id="schermata2-count" class="absolute -top-2 -right-2 bg-cyan-400 text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+    </button></a>
     </nav>
 
     <div class="md:hidden flex items-center">
-      <a href="#cart" class="relative hover:text-cyan-400 transition mr-4">
-        <svg xmlns="http://www.w3.org/2000/svg" width="1.8em" height="1.8em" viewBox="0 0 24 24">
+      <a id="btnSchermata2Mobile" href="#hero" class="relative hover:text-cyan-400 transition mr-4">
+       <svg xmlns="http://www.w3.org/2000/svg" width="1.8em" height="1.8em" viewBox="0 0 24 24">
         <path fill="currentColor" d="M7 22q-.825 0-1.412-.587T5 20t.588-1.412T7 18t1.413.588T9 20t-.587 1.413T7 22m10 0q-.825 0-1.412-.587T15 20t.588-1.412T17 18t1.413.588T19 20t-.587 1.413T17 22M6.15 6l2.4 5h7l2.75-5zM5.2 4h14.75q.575 0 .875.513t.025 1.037l-3.55 6.4q-.275.5-.737.775T15.55 13H8.1L7 15h12v2H7q-1.125 0-1.7-.987t-.05-1.963L6.6 11.6L3 4H1V2h3.25zm3.35 7h7z"/>
       </svg>
-        <span id="cart-count-mobile" class="absolute -top-2 -right-2 bg-cyan-400 text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+        <span id="schermata2-count-mobile" class="absolute -top-2 -right-2 bg-cyan-400 text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
       </a>
       <button id="hamburger-btn" class="hamburger-icon focus:outline-none" aria-label="Toggle navigation menu">
         <span></span>
@@ -257,9 +273,8 @@
   </div>
 </header>
 
-<main class="space-y-40 max-w-7xl mx-auto">
+<main id="home" class="space-y-40 max-w-7xl mx-auto block">
   
-
   <section id="hero" class="text-center px-6">
     <h2 class="text-6xl font-extrabold mb-6 drop-shadow-lg leading-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 animate-text-gradient">Benvenuto su <span class="text-cyan-400">ShopXperience</span></h2>
     <p class="text-xl text-gray-200 max-w-3xl mx-auto mb-10 transform translate-y-4 opacity-0 animate-fade-in-up delay-300">Il tuo negozio online dove stile, qualità e convenienza si incontrano.</p>
@@ -317,11 +332,6 @@
     </div>
   </section>
 
-  <section id="cart" class="px-6 max-w-4xl mx-auto">
-    <h2 class="text-4xl font-bold mb-10 text-center text-cyan-400 animate-slide-in-right">Il tuo carrello</h2>
-    <cart-view></cart-view>
-  </section>
-
   <section id="faq" class="px-6 max-w-4xl mx-auto">
     <h2 class="text-4xl font-bold mb-10 text-center text-cyan-400 animate-slide-in-left">Domande Frequenti</h2>
     <faq-accordion></faq-accordion>
@@ -337,23 +347,106 @@
     <h2 class="text-4xl font-bold mb-10 text-center text-cyan-400 animate-slide-in-left">Contattaci</h2>
     <contact-form></contact-form>
   </section>
-  <a href="#hero" id="scrollToTopBtn"  class="transition fixed bottom-6 right-6 text-black p-3 transition-all duration-300 " style="z-index: 9999;" aria-label="Scroll to top" onclick="toggleMobileMenu()">
+  <a href="#hero" id="scrollToTopBtn" class="transition fixed bottom-6 right-6 text-black p-3 transition-all duration-300 opacity-0 translate-y-5 hidden" style="z-index: 9999;" aria-label="Scroll to top">
     <button>
-    <svg xmlns="http://www.w3.org/2000/svg" width="5em" height="5em" viewBox="0 0 24 24">
-      <path fill="#00F0FF" d="m15 13l-4 4v-3H2v-2h9V9zM5 20v-4h2v2h10v-7.81l-5-4.5L7.21 10H4.22L12 3l10 9h-3v8z"/>
-    </svg>
-  </button></a>
+        <svg xmlns="http://www.w3.org/2000/svg" width="3.3em" height="3.3em" viewBox="0 0 16 16"><path fill="#26C6DA" d="M16 8L8 0L0 8h4v8h8V8z"/></svg>
+    </button>
+</a>
   
 
 </main>
 
 <div id="toast-container"></div>
+                    
+<section id="schermata2" class="hidden px-6 max-w-4xl mx-auto text-center space-y-6 ">
+  <h2 class="text-4xl font-bold mb-10 text-center text-cyan-400 animate-slide-in-right">Il tuo carrello</h2>
+  <schermata2-view></schermata2-view>
+  <button id="btnHomeCloseCart"
+  class="
+    group relative inline-flex items-center justify-center gap-3
+    overflow-hidden rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500
+    px-8 py-4 text-lg font-bold text-white
+    transition-all duration-300 ease-in-out
+    transform hover:-translate-y-1 hover:shadow-2xl hover:shadow-cyan-500/50
+    focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75
+  "
+>
+  <span class="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 transform bg-white opacity-10 transition-all duration-700 ease-in-out group-hover:translate-x-[-150px]"></span>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" width="3.3em" height="3.3em" viewBox="0 0 512 512">
+    <path fill="#fff7f7" d="M293.5 213a7.7 7.7 0 0 1-5.3-2L256 180.1L223.8 211a7.8 7.8 0 0 1-10.6 0a6.9 6.9 0 0 1 0-10l37.5-35.8a7.8 7.8 0 0 1 10.6 0l37.5 35.7a6.9 6.9 0 0 1 0 10.1a7.7 7.7 0 0 1-5.3 2.1Z" opacity="0">
+      <animateTransform attributeName="transform" begin="-1.3s" calcMode="spline" dur="3s" keySplines=".55, 0, .1, 1; .55, 0, .1, 1" repeatCount="indefinite" type="translate" values="0 30; 0 0; 0 -30"/>
+      <animate attributeName="opacity" begin="-1.3s" calcMode="spline" dur="3s" keySplines=".55, 0, .1, 1; .55, 0, .1, 1" repeatCount="indefinite" values="0; 1; 0"/>
+    </path>
+    <path fill="#fff7f7" d="M293.5 258a7.7 7.7 0 0 1-5.3-2L256 225.1L223.8 256a7.8 7.8 0 0 1-10.6 0a6.9 6.9 0 0 1 0-10l37.5-35.8a7.8 7.8 0 0 1 10.6 0l37.5 35.7a6.9 6.9 0 0 1 0 10.1a7.7 7.7 0 0 1-5.3 2.1Z" opacity="0">
+      <animateTransform attributeName="transform" begin="-1.2s" calcMode="spline" dur="3s" keySplines=".55, 0, .1, 1; .55, 0, .1, 1" repeatCount="indefinite" type="translate" values="0 30; 0 0; 0 -30"/><animate attributeName="opacity" begin="-1.2s" calcMode="spline" dur="3s" keySplines=".55, 0, .1, 1; .55, 0, .1, 1" repeatCount="indefinite" values="0; 1; 0"/>
+    </path>
+    <path fill="#fff7f7" d="M293.5 303a7.7 7.7 0 0 1-5.3-2L256 270.1L223.8 301a7.8 7.8 0 0 1-10.6 0a6.9 6.9 0 0 1 0-10l37.5-35.8a7.8 7.8 0 0 1 10.6 0l37.5 35.7a6.9 6.9 0 0 1 0 10.1a7.7 7.7 0 0 1-5.3 2.1Z" opacity="0">
+      <animateTransform attributeName="transform" begin="-1.1s" calcMode="spline" dur="3s" keySplines=".55, 0, .1, 1; .55, 0, .1, 1" repeatCount="indefinite" type="translate" values="0 30; 0 0; 0 -30"/>
+      <animate attributeName="opacity" begin="-1.1s" calcMode="spline" dur="3s" keySplines=".55, 0, .1, 1; .55, 0, .1, 1" repeatCount="indefinite" values="0; 1; 0"/>
+    </path>
+    <path fill="#fff7f7" d="M293.5 348a7.7 7.7 0 0 1-5.3-2L256 315.1L223.8 346a7.8 7.8 0 0 1-10.6 0a6.9 6.9 0 0 1 0-10l37.5-35.8a7.8 7.8 0 0 1 10.6 0l37.5 35.7a6.9 6.9 0 0 1 0 10.1a7.7 7.7 0 0 1-5.3 2.1Z" opacity="0">
+      <animateTransform attributeName="transform" begin="-1s" calcMode="spline" dur="3s" keySplines=".55, 0, .1, 1; .55, 0, .1, 1" repeatCount="indefinite" type="translate" values="0 30; 0 0; 0 -30"/>
+      <animate attributeName="opacity" begin="-1s" calcMode="spline" dur="3s" keySplines=".55, 0, .1, 1; .55, 0, .1, 1" repeatCount="indefinite" values="0; 1; 0"/>
+    </path>
+</svg>
+  <span>Torna allo Shopping</span>
+</button>
+
+
+</section>
 
 <footer class="bg-black bg-opacity-50 mt-32 py-8 text-center text-gray-400 text-sm border-t border-cyan-700">
   © 2025 ShopXperience. Tutti i diritti riservati.
 </footer>
 
 <script type="module">
+
+  const home = document.getElementById('home');
+  const schermata2 = document.getElementById('schermata2');
+
+  document.getElementById('btnSchermata2').addEventListener('click', () => {
+  window.scrollTo(0, 0);
+  home.classList.add('hidden');
+  home.classList.remove('block');
+  schermata2.classList.remove('hidden');
+  schermata2.classList.add('block');
+  document.dispatchEvent(new CustomEvent('schermata2-updated'));
+});
+
+document.getElementById('btnSchermata2Mobile').addEventListener('click', (e) => {
+  e.preventDefault();
+  window.scrollTo(0, 0);
+  home.classList.add('hidden');
+  home.classList.remove('block');
+  schermata2.classList.remove('hidden');
+  schermata2.classList.add('block');
+  document.dispatchEvent(new CustomEvent('schermata2-updated'));
+});
+
+document.getElementById('btnHomeTop').addEventListener('click', () => {
+  schermata2.classList.add('hidden');
+  schermata2.classList.remove('block');
+  home.classList.remove('hidden');
+  home.classList.add('block');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+document.getElementById('btnHome').addEventListener('click', () => {
+    schermata2.classList.add('hidden');
+    schermata2.classList.remove('block');
+    home.classList.remove('hidden');
+    home.classList.add('block');
+});
+
+document.getElementById('btnHomeCloseCart').addEventListener('click', () => {
+  schermata2.classList.add('hidden');
+  schermata2.classList.remove('block');
+  home.classList.remove('hidden');
+  home.classList.add('block');
+});
+
+
 
   const PRODUCTS = [
     { id: 1, name: 'Occhiali Gucci', price: 319.99, image: 'https://www.estheroptica.eu/wp-content/uploads/2023/04/Gucci-GG1331S-001-black-grey-54-Uomo_man_sunglasses_saules_akiniai_vyrams_occhiali_da_sole_uomo.jpg' , description: 'Eleganza e protezione potenziata in un unico accessorio. Perfetti per ogni stagione e occasione, questi occhiali combinano stile iconico con materiali di nuova generazione per garantire durata e comfort avanzati. Protezione UV potenziata e visione ottimizzata.', tags: ['Moda', 'Estate', 'Accessori'],
@@ -390,7 +483,58 @@
         'https://dallabonaorologi.com/cdn/shop/files/C4C99FDD-5A83-4C92-BEC0-7F7C077AE858.jpg?v=1710886319',
         'https://media.rolex.com/image/upload/q_auto:best/f_auto/c_limit,w_3840/v1727258031/rolexcom/collection/family-pages/professional-watches/submariner/top-navigation/professional-watches-submariner-all-models-navigation_m126603-0001_2210jva_001'
       ]
+    },
+    { id: 6, name: 'Orologio Rolex', price: 15399.99, image: 'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700', description: 'Per chi ama distinguersi con classe. Un simbolo di prestigio e precisione, l\'orologio Rolex è un capolavoro di ingegneria e design. Resistente all\'acqua, con movimento automatico auto-ricaricante e materiali di lusso, è l\'investimento perfetto per il tuo polso.', tags: ['Moda', 'Eleganza', 'Lusso', 'Gioielli'],
+      additionalImages: [
+        'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700',
+        'https://dallabonaorologi.com/cdn/shop/files/C4C99FDD-5A83-4C92-BEC0-7F7C077AE858.jpg?v=1710886319',
+        'https://media.rolex.com/image/upload/q_auto:best/f_auto/c_limit,w_3840/v1727258031/rolexcom/collection/family-pages/professional-watches/submariner/top-navigation/professional-watches-submariner-all-models-navigation_m126603-0001_2210jva_001'
+      ]
+    },
+    { id: 7, name: 'Orologio Rolex', price: 15399.99, image: 'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700', description: 'Per chi ama distinguersi con classe. Un simbolo di prestigio e precisione, l\'orologio Rolex è un capolavoro di ingegneria e design. Resistente all\'acqua, con movimento automatico auto-ricaricante e materiali di lusso, è l\'investimento perfetto per il tuo polso.', tags: ['Moda', 'Eleganza', 'Lusso', 'Gioielli'],
+      additionalImages: [
+        'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700',
+        'https://dallabonaorologi.com/cdn/shop/files/C4C99FDD-5A83-4C92-BEC0-7F7C077AE858.jpg?v=1710886319',
+        'https://media.rolex.com/image/upload/q_auto:best/f_auto/c_limit,w_3840/v1727258031/rolexcom/collection/family-pages/professional-watches/submariner/top-navigation/professional-watches-submariner-all-models-navigation_m126603-0001_2210jva_001'
+      ]
+    },
+    { id: 8, name: 'Orologio Rolex', price: 15399.99, image: 'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700', description: 'Per chi ama distinguersi con classe. Un simbolo di prestigio e precisione, l\'orologio Rolex è un capolavoro di ingegneria e design. Resistente all\'acqua, con movimento automatico auto-ricaricante e materiali di lusso, è l\'investimento perfetto per il tuo polso.', tags: ['Moda', 'Eleganza', 'Lusso', 'Gioielli'],
+      additionalImages: [
+        'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700',
+        'https://dallabonaorologi.com/cdn/shop/files/C4C99FDD-5A83-4C92-BEC0-7F7C077AE858.jpg?v=1710886319',
+        'https://media.rolex.com/image/upload/q_auto:best/f_auto/c_limit,w_3840/v1727258031/rolexcom/collection/family-pages/professional-watches/submariner/top-navigation/professional-watches-submariner-all-models-navigation_m126603-0001_2210jva_001'
+      ]
+    },
+    { id: 9, name: 'Orologio Rolex', price: 15399.99, image: 'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700', description: 'Per chi ama distinguersi con classe. Un simbolo di prestigio e precisione, l\'orologio Rolex è un capolavoro di ingegneria e design. Resistente all\'acqua, con movimento automatico auto-ricaricante e materiali di lusso, è l\'investimento perfetto per il tuo polso.', tags: ['Moda', 'Eleganza', 'Lusso', 'Gioielli'],
+      additionalImages: [
+        'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700',
+        'https://dallabonaorologi.com/cdn/shop/files/C4C99FDD-5A83-4C92-BEC0-7F7C077AE858.jpg?v=1710886319',
+        'https://media.rolex.com/image/upload/q_auto:best/f_auto/c_limit,w_3840/v1727258031/rolexcom/collection/family-pages/professional-watches/submariner/top-navigation/professional-watches-submariner-all-models-navigation_m126603-0001_2210jva_001'
+      ]
+    },
+    { id: 10, name: 'Orologio Rolex', price: 15399.99, image: 'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700', description: 'Per chi ama distinguersi con classe. Un simbolo di prestigio e precisione, l\'orologio Rolex è un capolavoro di ingegneria e design. Resistente all\'acqua, con movimento automatico auto-ricaricante e materiali di lusso, è l\'investimento perfetto per il tuo polso.', tags: ['Moda', 'Eleganza', 'Lusso', 'Gioielli'],
+      additionalImages: [
+        'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700',
+        'https://dallabonaorologi.com/cdn/shop/files/C4C99FDD-5A83-4C92-BEC0-7F7C077AE858.jpg?v=1710886319',
+        'https://media.rolex.com/image/upload/q_auto:best/f_auto/c_limit,w_3840/v1727258031/rolexcom/collection/family-pages/professional-watches/submariner/top-navigation/professional-watches-submariner-all-models-navigation_m126603-0001_2210jva_001'
+      ]
+    },
+    { id: 11, name: 'Orologio Rolex', price: 15399.99, image: 'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700', description: 'Per chi ama distinguersi con classe. Un simbolo di prestigio e precisione, l\'orologio Rolex è un capolavoro di ingegneria e design. Resistente all\'acqua, con movimento automatico auto-ricaricante e materiali di lusso, è l\'investimento perfetto per il tuo polso.', tags: ['Moda', 'Eleganza', 'Lusso', 'Gioielli'],
+      additionalImages: [
+        'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700',
+        'https://dallabonaorologi.com/cdn/shop/files/C4C99FDD-5A83-4C92-BEC0-7F7C077AE858.jpg?v=1710886319',
+        'https://media.rolex.com/image/upload/q_auto:best/f_auto/c_limit,w_3840/v1727258031/rolexcom/collection/family-pages/professional-watches/submariner/top-navigation/professional-watches-submariner-all-models-navigation_m126603-0001_2210jva_001'
+      ]
+    },
+    { id: 12, name: 'Orologio Rolex', price: 15399.99, image: 'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700', description: 'Per chi ama distinguersi con classe. Un simbolo di prestigio e precisione, l\'orologio Rolex è un capolavoro di ingegneria e design. Resistente all\'acqua, con movimento automatico auto-ricaricante e materiali di lusso, è l\'investimento perfetto per il tuo polso.', tags: ['Moda', 'Eleganza', 'Lusso', 'Gioielli'],
+      additionalImages: [
+        'https://a.1stdibscdn.com/unworn-rolex-submariner-date-starbucks-reference-126610lv-complete-set-2025-for-sale/j_44012/j_266959521751061707663/j_26695952_1751061708334_bg_processed.jpg?disable=upscale&auto=webp&quality=60&width=700',
+        'https://dallabonaorologi.com/cdn/shop/files/C4C99FDD-5A83-4C92-BEC0-7F7C077AE858.jpg?v=1710886319',
+        'https://media.rolex.com/image/upload/q_auto:best/f_auto/c_limit,w_3840/v1727258031/rolexcom/collection/family-pages/professional-watches/submariner/top-navigation/professional-watches-submariner-all-models-navigation_m126603-0001_2210jva_001'
+      ]
     }
+
+    
 ];
 
 
@@ -407,7 +551,7 @@
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         ${type === 'success' ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />' : ''}
         ${type === 'error' ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />' : ''}
-        ${type === 'info' && !type ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />' : ''}
+        ${type === 'info' ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />' : ''}
       </svg>
       <span>${message}</span>
     `;
@@ -424,78 +568,78 @@
   }
 
 
-  const cartService = {
-    cart: JSON.parse(localStorage.getItem('shopxperience-cart')) || [],
+  const schermata2Service = {
+    schermata2: JSON.parse(localStorage.getItem('shopxperience-schermata2')) || [],
 
-    saveCart() {
-      localStorage.setItem('shopxperience-cart', JSON.stringify(this.cart));
-      this.updateCartCount();
-      this.dispatchEvent(new CustomEvent('cart-updated'));
+    saveschermata2() {
+      localStorage.setItem('shopxperience-schermata2', JSON.stringify(this.schermata2));
+      this.updateschermata2Count();
+      this.dispatchEvent(new CustomEvent('schermata2-updated'));
     },
 
     addItem(productId, quantity = 1) {
       const product = PRODUCTS.find(p => p.id === productId);
       if (!product) return;
 
-      const existingItem = this.cart.find(item => item.id === productId);
+      const existingItem = this.schermata2.find(item => item.id === productId);
       if (existingItem) {
         existingItem.quantity += quantity;
       } else {
-        this.cart.push({ ...product, quantity });
+        this.schermata2.push({ ...product, quantity });
       }
-      this.saveCart();
+      this.saveschermata2();
     },
 
     removeItem(productId) {
-      const cartItemElement = document.querySelector(`.cart-item-animation[data-product-id="${productId}"]`);
-      if (cartItemElement) {
-        cartItemElement.classList.add('cart-item-remove-animation');
-        cartItemElement.addEventListener('animationend', () => {
-          this.cart = this.cart.filter(item => item.id !== productId);
-          this.saveCart();
+      const schermata2ItemElement = document.querySelector(`.schermata2-item-animation[data-product-id="${productId}"]`);
+      if (schermata2ItemElement) {
+        schermata2ItemElement.classList.add('schermata2-item-remove-animation');
+        schermata2ItemElement.addEventListener('animationend', () => {
+          this.schermata2 = this.schermata2.filter(item => item.id !== productId);
+          this.saveschermata2();
         }, { once: true });
       } else {
-        this.cart = this.cart.filter(item => item.id !== productId);
-        this.saveCart();
+        this.schermata2 = this.schermata2.filter(item => item.id !== productId);
+        this.saveschermata2();
       }
     },
 
     updateQuantity(productId, quantity) {
-      const item = this.cart.find(item => item.id === productId);
+      const item = this.schermata2.find(item => item.id === productId);
       if (item) {
         item.quantity = Math.max(0, quantity);
         if (item.quantity === 0) {
           this.removeItem(productId);
         } else {
-          this.saveCart();
+          this.saveschermata2();
         }
       }
     },
 
     getTotalItems() {
-      return this.cart.reduce((total, item) => total + item.quantity, 0);
+      return this.schermata2.reduce((total, item) => total + item.quantity, 0);
     },
 
     getTotalPrice() {
-      return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+      return this.schermata2.reduce((total, item) => total + (item.price * item.quantity), 0);
     },
 
-    clearCart() {
-      this.cart = [];
-      this.saveCart();
+    clearschermata2() {
+      this.schermata2 = [];
+      this.saveschermata2();
     },
 
-    updateCartCount() {
+    updateschermata2Count() {
       const count = this.getTotalItems();
-      const cartCountElement = document.getElementById('cart-count');
-      const cartCountMobileElement = document.getElementById('cart-count-mobile'); 
-      if (cartCountElement) {
-        cartCountElement.textContent = count;
-        cartCountElement.classList.toggle('hidden', count === 0);
+      const schermata2CountElement = document.getElementById('schermata2-count');
+      const schermata2CountMobileElement = document.getElementById('schermata2-count-mobile'); 
+      if (schermata2CountElement) {
+        schermata2CountElement.textContent = count;
+        schermata2CountElement.classList.toggle('hidden', count === 0);
       }
-      if (cartCountMobileElement) {
-        cartCountMobileElement.textContent = count;
-        cartCountMobileElement.classList.toggle('hidden', count === 0);
+      if (schermata2CountMobileElement) {
+        schermata2CountMobileElement.textContent = count;
+        schermata2CountMobileElement.classList.toggle('hidden', count === 0);
       }
     },
 
@@ -513,20 +657,20 @@
           <img src="${image}" alt="${name}" class="w-full h-48 object-cover rounded-md mb-4 transform group-hover:scale-105 transition duration-300 shadow-md" />
           <h3 class="text-xl font-semibold text-cyan-300 group-hover:text-cyan-200">${name}</h3>
           <p class="text-cyan-400 mt-2 text-lg font-bold">${price.toFixed(2)}€</p>
-          <button class="add-to-cart-btn mt-4 bg-cyan-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-cyan-700 transition shadow-md w-full 
+          <button class="add-to-schermata2-btn mt-4 bg-cyan-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-cyan-700 transition shadow-md w-full 
                        opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75">Aggiungi al carrello</button>
         </div>
       `;
       this.querySelector('div').addEventListener('click', (e) => {
-        if (!e.target.closest('.add-to-cart-btn')) {
+        if (!e.target.closest('.add-to-schermata2-btn')) {
           window.showDetail(id);
         }
       });
-      this.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
+      this.querySelector('.add-to-schermata2-btn').addEventListener('click', (e) => {
         e.stopPropagation(); 
-        cartService.addItem(id);
+        schermata2Service.addItem(id);
         showToast(`${name} aggiunto al carrello!`, 'success');
-        document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('schermata2').scrollIntoView({ behavior: 'smooth' });
       });
     }
   }
@@ -610,7 +754,7 @@
                 <div class="mt-6 flex flex-wrap gap-2">
                     ${tags.map(t => `<span class="bg-cyan-900 text-cyan-200 px-4 py-1 rounded-full text-sm font-medium border border-cyan-700">${t}</span>`).join('')}
                 </div>
-                <button id="add-to-cart-detail-btn" class="mt-8 bg-cyan-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-cyan-700 transition shadow-lg w-full text-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75">Aggiungi al carrello</button>
+                <button id="add-to-schermata2-detail-btn" class="mt-8 bg-cyan-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-cyan-700 transition shadow-lg w-full text-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75">Aggiungi al carrello</button>
             </div>
         `;
 
@@ -619,10 +763,10 @@
             this.querySelector('#next-image').addEventListener('click', () => this.navigateImage(1));
         }
 
-        this.querySelector('#add-to-cart-detail-btn').addEventListener('click', () => {
-            cartService.addItem(id);
+        this.querySelector('#add-to-schermata2-detail-btn').addEventListener('click', () => {
+            schermata2Service.addItem(id);
             showToast(`${name} aggiunto al carrello!`, 'success');
-            document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('schermata2').scrollIntoView({ behavior: 'smooth' });
         });
     }
 }
@@ -731,44 +875,52 @@
   }
   customElements.define('contact-form', ContactForm);
 
-  class CartView extends HTMLElement {
+  class schermata2View extends HTMLElement {
     constructor() {
       super();
       this.render = this.render.bind(this); 
     }
 
     connectedCallback() {
-      document.addEventListener('cart-updated', this.render);
+      document.addEventListener('schermata2-updated', this.render);
       this.render();
     }
 
     disconnectedCallback() {
-      document.removeEventListener('cart-updated', this.render);
+      document.removeEventListener('schermata2-updated', this.render);
     }
 
     render() {
-      const cartItems = cartService.cart;
-      const totalItems = cartService.getTotalItems();
-      const totalPrice = cartService.getTotalPrice();
+      const schermata2Items = schermata2Service.schermata2;
+      const totalItems = schermata2Service.getTotalItems();
+      const totalPrice = schermata2Service.getTotalPrice();
 
       if (totalItems === 0) {
-        this.innerHTML = `
-          <div class="bg-gradient-to-br from-gray-800 to-black p-8 rounded-2xl shadow-2xl text-center text-gray-300 border border-gray-700">
-            <svg xmlns="http://www.w3.org/2000/svg" width="8em" height="8em" viewBox="0 0 24 24" text-align="center" class="mx-auto mb-4 text-cyan-400 animate-bounce">
-              <path fill="currentColor" d="M7 22q-.825 0-1.412-.587T5 20t.588-1.412T7 18t1.413.588T9 20t-.587 1.413T7 22m10 0q-.825 0-1.412-.587T15 20t.588-1.412T17 18t1.413.588T19 20t-.587 1.413T17 22M6.15 6l2.4 5h7l2.75-5zM5.2 4h14.75q.575 0 .875.513t.025 1.037l-3.55 6.4q-.275.5-.737.775T15.55 13H8.1L7 15h12v2H7q-1.125 0-1.7-.987t-.05-1.963L6.6 11.6L3 4H1V2h3.25zm3.35 7h7z"/>
-              </svg>
-            <p class="text-xl">Il tuo carrello è attualmente vuoto.</p>
-            <p class="mt-2">Inizia a esplorare il nostro <a href="#catalog" class="text-cyan-400 hover:underline transition" onclick="toggleMobileMenu()">catalogo</a> per trovare i tuoi prodotti preferiti!</p>
-          </div>
-        `;
-        return;
-      }
+    this.innerHTML = `
+        <section>
+            <div class="bg-gradient-to-br from-gray-800 to-black p-8 rounded-2xl shadow-2xl text-center text-gray-300 border border-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8em" height="8em" viewBox="0 0 24 24" text-align="center" class="mx-auto mb-4 text-cyan-400 animate-bounce">
+                    <path fill="currentColor" d="M7 22q-.825 0-1.412-.587T5 20t.588-1.412T7 18t1.413.588T9 20t-.587 1.413T7 22m10 0q-.825 0-1.412-.587T15 20t.588-1.412T17 18t1.413.588T19 20t-.587 1.413T17 22M6.15 6l2.4 5h7l2.75-5zM5.2 4h14.75q.575 0 .875.513t.025 1.037l-3.55 6.4q-.275.5-.737.775T15.55 13H8.1L7 15h12v2H7q-1.125 0-1.7-.987t-.05-1.963L6.6 11.6L3 4H1V2h3.25zm3.35 7h7z"/>
+                </svg>
+                <p class="text-xl">Il tuo carrello è attualmente vuoto.</p>
+                <p class="mt-2">Inizia a esplorare il nostro 
+                    <a href="#catalog" class="text-cyan-400 hover:underline transition" 
+                       onclick="event.preventDefault(); document.getElementById('home').classList.remove('hidden'); document.getElementById('schermata2').classList.add('hidden'); document.getElementById('catalog').scrollIntoView({behavior: 'smooth'});">
+                        catalogo
+                    </a> 
+                per trovare i tuoi prodotti preferiti!</p>
+            </div>
+        </section>
+    `;
+    return;
+}
 
       this.innerHTML = `
+      <section>
         <div class="bg-gradient-to-br from-gray-900 to-black p-8 rounded-2xl shadow-2xl space-y-6 border border-cyan-700">
-          <div id="cart-items-list" class="space-y-4">
-            ${cartItems.map(item => `
-              <div class="flex items-center justify-between bg-white bg-opacity-10 p-4 rounded-lg cart-item-animation border border-gray-700" data-product-id="${item.id}">
+          <div id="schermata2-items-list" class="space-y-4">
+            ${schermata2Items.map(item => `
+              <div class="flex items-center justify-between bg-white bg-opacity-10 p-4 rounded-lg schermata2-item-animation border border-gray-700" data-product-id="${item.id}">
                 <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-md mr-4 shadow-md border border-gray-600" />
                 <div class="flex-grow">
                   <h3 class="text-lg font-semibold text-cyan-300">${item.name}</h3>
@@ -812,29 +964,30 @@
             <p id="order-confirmation-msg" class="text-green-400 text-center mt-4 hidden text-lg font-semibold"></p>
           </form>
         </div>
+        </section>
       `;
 
       this.querySelectorAll('[data-action="increase"]').forEach(button => {
         button.addEventListener('click', (e) => {
           const id = parseInt(e.target.dataset.id);
-          const item = cartService.cart.find(i => i.id === id);
-          if (item) cartService.updateQuantity(id, item.quantity + 1);
+          const item = schermata2Service.schermata2.find(i => i.id === id);
+          if (item) schermata2Service.updateQuantity(id, item.quantity + 1);
         });
       });
 
       this.querySelectorAll('[data-action="decrease"]').forEach(button => {
         button.addEventListener('click', (e) => {
           const id = parseInt(e.target.dataset.id);
-          const item = cartService.cart.find(i => i.id === id);
-          if (item) cartService.updateQuantity(id, item.quantity - 1);
+          const item = schermata2Service.schermata2.find(i => i.id === id);
+          if (item) schermata2Service.updateQuantity(id, item.quantity - 1);
         });
       });
 
       this.querySelectorAll('[data-action="remove"]').forEach(button => {
         button.addEventListener('click', (e) => {
-          const id = parseInt(e.target.dataset.id);
+          const id = parseInt(button.dataset.id);
           showToast(`Rimozione di un articolo in corso...`, 'info');
-          cartService.removeItem(id);
+          schermata2Service.removeItem(id);
         });
       });
       const checkoutForm = this.querySelector('#checkout-form');
@@ -847,14 +1000,14 @@
           const data = Object.fromEntries(formData.entries());
 
           if (!data.name || !data.email || !data.address || !data.city || !data.zip || !data.payment) {
-            showToast('Per favorwe, compila tutti i campi richiesti per completare l\'ordine.', 'error');
+            showToast('Per favore, compila tutti i campi richiesti per completare l\'ordine.', 'error');
             return;
           }
           orderConfirmationMsg.textContent = `Grazie ${data.name}, il tuo ordine è stato completato con successo! Riceverai una email di conferma a breve.`;
           orderConfirmationMsg.classList.remove('hidden');
           showToast('Ordine completato con successo!', 'success');
           checkoutForm.reset();
-          cartService.clearCart();
+          schermata2Service.clearschermata2();
           setTimeout(() => {
             orderConfirmationMsg.classList.add('hidden');
           }, 7000);
@@ -862,7 +1015,7 @@
       }
     }
   }
-  customElements.define('cart-view', CartView);
+  customElements.define('schermata2-view', schermata2View);
 
 
   window.addEventListener('load', () => {
@@ -904,7 +1057,7 @@
   hamburgerBtn.addEventListener('click', toggleMobileMenu);
 
   document.addEventListener('DOMContentLoaded', () => {
-    cartService.updateCartCount();
+    schermata2Service.updateschermata2Count();
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -966,7 +1119,7 @@
     interval: 100
   });
 
-  ScrollReveal().reveal('#catalog h2, #specials h2, #reviews h2, #cart h2, #faq h2, #newsletter h2, #contact h2', {
+  ScrollReveal().reveal('#catalog h2, #specials h2, #reviews h2, #schermata2 h2, #faq h2, #newsletter h2, #contact h2', {
     distance: '50px',
     origin: 'top',
     duration: 1000,
